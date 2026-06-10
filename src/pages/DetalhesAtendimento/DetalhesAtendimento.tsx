@@ -9,10 +9,9 @@ import { avisarCliente } from '../../services/whatsapp';
 export function DetalhesAtendimento() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { atendimentos } = useAtendimentos();
+  const { atendimentos, atualizarStatus } = useAtendimentos();
 
   const atendimento = atendimentos.find((a) => a.id === id);
-  const { atualizarStatus } = useAtendimentos();
 
   if (!atendimento) {
     return (
