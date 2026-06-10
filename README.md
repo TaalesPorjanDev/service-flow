@@ -1,73 +1,204 @@
-# React + TypeScript + Vite
+# 🚀 Service Flow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<img src="public/dashboard.png" width="100%" />
 
-Currently, two official plugins are available:
+<br>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Sistema web para gerenciamento de atendimentos de uma assistência técnica de máquinas de lavar roupa.
 
-## React Compiler
+Desenvolvido utilizando React, TypeScript, Vite e Tailwind CSS, com foco em organização, produtividade e preparação para futuras integrações com APIs e automações utilizando n8n.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📸 Preview do Sistema
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Dashboard
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+<img src="public/dashboard.png" width="100%" />
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Novo Atendimento
+
+<img src="public/novo-atendimento.png" width="100%" />
+
+---
+
+### Lista de Atendimentos
+
+<img src="public/atendimentos.png" width="100%" />
+
+---
+
+### Detalhes do Atendimento
+
+<img src="public/detalhes.png" width="100%" />
+
+---
+
+## 📋 Sobre o Projeto
+
+O Service Flow foi criado para auxiliar técnicos de assistência técnica no gerenciamento diário de clientes, visitas e atendimentos.
+
+A aplicação utiliza dados mockados para simular um ambiente real de operação, mantendo uma arquitetura preparada para futuras integrações com APIs, banco de dados e fluxos automatizados.
+
+---
+
+## ✨ Funcionalidades
+
+### Dashboard
+
+- Visualização rápida dos indicadores principais
+- Visitas agendadas para o dia
+- Clientes aguardando retorno
+- Serviços finalizados
+- Atendimentos cancelados
+
+### Gestão de Atendimentos
+
+- Cadastro de novos atendimentos
+- Atualização de informações
+- Controle de status
+- Histórico de atendimento
+
+### Pesquisa e Filtros
+
+- Busca por cliente
+- Filtro por status
+- Filtro por bairro
+
+### Detalhamento
+
+- Visualização completa dos dados do cliente
+- Informações da máquina
+- Histórico de atendimento
+- Alteração de status
+
+---
+
+## 🛠 Tecnologias Utilizadas
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router DOM
+- React Hook Form
+- Axios
+
+---
+
+## 📂 Estrutura do Projeto
+
+```bash
+src/
+├── components/
+├── hooks/
+├── layouts/
+├── mock/
+├── pages/
+├── routes/
+├── services/
+└── types/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ Executando o Projeto
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Clone o repositório:
+
+```bash
+git clone https://github.com/TaalesPorjanDev/service-flow.git
 ```
+
+Acesse a pasta:
+
+```bash
+cd service-flow
+```
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Execute o projeto:
+
+```bash
+npm run dev
+```
+
+A aplicação estará disponível em:
+
+```bash
+http://localhost:5173
+```
+
+---
+
+## 📜 Scripts Disponíveis
+
+```bash
+npm run dev
+```
+
+Executa o projeto em modo desenvolvimento.
+
+```bash
+npm run build
+```
+
+Gera a build de produção.
+
+```bash
+npm run preview
+```
+
+Visualiza a build localmente.
+
+---
+
+## 🔌 Preparado para Integrações Futuras
+
+O projeto foi estruturado para facilitar integrações futuras com:
+
+- APIs REST
+- Banco de dados
+- Webhooks
+- n8n
+- WhatsApp Business
+- Sistemas de CRM
+- Dashboards analíticos
+
+O arquivo:
+
+```bash
+src/services/api.ts
+```
+
+já está preparado para substituir os dados mockados por chamadas reais utilizando Axios.
+
+---
+
+## 🚀 Possíveis Evoluções
+
+- Sistema de autenticação
+- Controle de usuários
+- Banco de dados
+- Integração com WhatsApp
+- Notificações automáticas
+- Integração com n8n
+- Dashboard com gráficos
+- Controle financeiro
+- Histórico completo por cliente
+
+---
+
+## 👨‍💻 Autor
+
+**Tales Porjan**
+
+GitHub:
+https://github.com/TaalesPorjanDev
