@@ -1,0 +1,60 @@
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { atendimentosMock } from '../mocks/atendimentos'
+import type { Atendimento, NovoAtendimentoForm } from '../types/atendimento'
+
+interface AtendimentosContextValue {
+  atendimentos: Atendimento[]
+  adicionarAtendimento: (dados: NovoAtendimentoForm) => Atendimento
+}
+
+const AtendimentosContext = createContext<AtendimentosContextValue | null>(null)
+
+function gerarId(atendimentos: Atendimento[]): string {
+  const numeros = atendimentos
+    .map((a) => parseInt(a.id.replace('ATD-', ''), 10))
+    .filter((n) => !Number.isNaN(n))
+
+  const proximo = numeros.length > 0 ? Math.max(...numeros) + 1 : 1
+  return `ATD-${String(proximo).padStart(3, '0')}`
+}
+
+export function AtendimentosProvider({ children }: { children: ReactNode }) {
+  const [atendimentos, setAtendimentos] = useState<Atendimento[]>(() => {
+    try {
+      const salvo = localStorage.getItem('atendimentos')
+      return salvo ? JSON.parse(salvo) : atendimentosMock
+    } catch {
+      return atendimentosMock
+    }
+  })
+
+  // Salvar no localStorage sempre que atendimentos mudar
+  useEffect(() => {
+    localStorage.setItem('atendimentos', JSON.stringify(atendimentos))
+  }, [atendimentos])
+
+  function adicionarAtendimento(dados: NovoAtendimentoForm): Atendimento {
+    const novo: Atendimento = {
+      id: gerarId(atendimentos),
+      ...dados,
+      status: 'novo',
+    }
+
+    setAtendimentos((prev) => [novo, ...prev])
+    return novo
+  }
+
+  return (
+    <AtendimentosContext.Provider value={{ atendimentos, adicionarAtendimento }}>
+      {children}
+    </AtendimentosContext.Provider>
+  )
+}
+
+export function useAtendimentos() {
+  const context = useContext(AtendimentosContext)
+  if (!context) {
+    throw new Error('useAtendimentos deve ser usado dentro de AtendimentosProvider')
+  }
+  return context
+}
