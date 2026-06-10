@@ -5,7 +5,6 @@ import {
 } from '../../components/StatusBadge/StatusBadge';
 import { useAtendimentos } from '../../contexts/AtendimentosContext';
 import { avisarCliente } from '../../services/whatsapp';
-import type { AtendimentoStatus } from '../../types/atendimento';
 
 export function DetalhesAtendimento() {
   const { id } = useParams<{ id: string }>();
