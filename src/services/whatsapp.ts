@@ -14,6 +14,11 @@ export const avisarCliente = async (
                 marca: atendimento.marca,
                 dataVisita: atendimento.dataVisita,
                 horarioVisita: atendimento.horarioVisita
+            },
+            {
+                headers: {
+                    'x-api-key': import.meta.env.VITE_N8N_API_KEY || ''
+                }
             }
         );
 
