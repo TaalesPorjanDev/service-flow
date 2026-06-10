@@ -5,6 +5,7 @@ import {
 } from '../../components/StatusBadge/StatusBadge';
 import { useAtendimentos } from '../../contexts/AtendimentosContext';
 import { avisarCliente } from '../../services/whatsapp';
+import type { AtendimentoStatus } from '../../types/atendimento';
 
 export function DetalhesAtendimento() {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +13,7 @@ export function DetalhesAtendimento() {
   const { atendimentos } = useAtendimentos();
 
   const atendimento = atendimentos.find((a) => a.id === id);
+  const { atualizarStatus } = useAtendimentos();
 
   if (!atendimento) {
     return (
@@ -103,6 +105,26 @@ export function DetalhesAtendimento() {
               <p className="mt-1">
                 <StatusBadge status={atendimento.status} />
               </p>
+              <div className="mt-4 flex gap-2">
+                <button
+                  onClick={() => atualizarStatus(atendimento.id, 'agendado')}
+                  className="rounded bg-blue-600 px-3 py-1 text-sm font-semibold text-white hover:bg-blue-700"
+                >
+                  Marcar como em andamento
+                </button>
+                <button
+                  onClick={() => atualizarStatus(atendimento.id, 'finalizado')}
+                  className="rounded bg-green-600 px-3 py-1 text-sm font-semibold text-white hover:bg-green-700"
+                >
+                  Marcar como concluído
+                </button>
+                <button
+                  onClick={() => atualizarStatus(atendimento.id, 'cancelado')}
+                  className="rounded bg-red-600 px-3 py-1 text-sm font-semibold text-white hover:bg-red-700"
+                >
+                  Marcar como cancelado
+                </button>
+              </div>
             </div>
 
             <div>

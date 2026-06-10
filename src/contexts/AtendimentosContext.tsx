@@ -5,6 +5,7 @@ import type { Atendimento, NovoAtendimentoForm } from '../types/atendimento'
 interface AtendimentosContextValue {
   atendimentos: Atendimento[]
   adicionarAtendimento: (dados: NovoAtendimentoForm) => Atendimento
+  atualizarStatus: (id: string, status: Atendimento['status']) => void
 }
 
 const AtendimentosContext = createContext<AtendimentosContextValue | null>(null)
@@ -44,8 +45,14 @@ export function AtendimentosProvider({ children }: { children: ReactNode }) {
     return novo
   }
 
+  function atualizarStatus(id: string, status: Atendimento['status']) {
+    setAtendimentos((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
+  }
+
   return (
-    <AtendimentosContext.Provider value={{ atendimentos, adicionarAtendimento }}>
+    <AtendimentosContext.Provider
+      value={{ atendimentos, adicionarAtendimento, atualizarStatus }}
+    >
       {children}
     </AtendimentosContext.Provider>
   )
