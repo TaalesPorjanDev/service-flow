@@ -6,6 +6,7 @@ interface AtendimentosContextValue {
   atendimentos: Atendimento[]
   adicionarAtendimento: (dados: NovoAtendimentoForm) => Atendimento
   atualizarStatus: (id: string, status: Atendimento['status']) => void
+  excluirAtendimento: (id: string) => void
 }
 
 const AtendimentosContext = createContext<AtendimentosContextValue | null>(null)
@@ -49,9 +50,13 @@ export function AtendimentosProvider({ children }: { children: ReactNode }) {
     setAtendimentos((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
   }
 
+  function excluirAtendimento(id: string) {
+    setAtendimentos((prev) => prev.filter((a) => a.id !== id))
+  }
+
   return (
     <AtendimentosContext.Provider
-      value={{ atendimentos, adicionarAtendimento, atualizarStatus }}
+      value={{ atendimentos, adicionarAtendimento, atualizarStatus, excluirAtendimento }}
     >
       {children}
     </AtendimentosContext.Provider>

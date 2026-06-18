@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useAtendimentos } from '../../contexts/AtendimentosContext'
+import { normalizarParaIsoDate } from '../../utils/format'
 import type { NovoAtendimentoForm } from '../../types/atendimento'
 
 const schema = z.object({
@@ -56,6 +57,7 @@ export function NovoAtendimento() {
       ...dados,
       endereco: dados.endereco || undefined,
       observacao: dados.observacao || undefined,
+      dataVisita: normalizarParaIsoDate(dados.dataVisita),
     }
 
     const criado = adicionarAtendimento(payload)

@@ -5,6 +5,7 @@ import {
 } from '../../components/StatusBadge/StatusBadge';
 import { useAtendimentos } from '../../contexts/AtendimentosContext';
 import { avisarCliente } from '../../services/whatsapp';
+import { formatarDataSomente } from '../../utils/format';
 
 export function DetalhesAtendimento() {
   const { id } = useParams<{ id: string }>();
@@ -69,14 +70,7 @@ export function DetalhesAtendimento() {
               <p className="text-xs font-medium text-slate-500 uppercase">
                 Telefone
               </p>
-              <p className="mt-1 text-base text-slate-800">
-                <a
-                  href={`tel:${atendimento.telefone}`}
-                  className="text-blue-600 hover:underline"
-                >
-                  {atendimento.telefone}
-                </a>
-              </p>
+              <p className="mt-1 text-base text-slate-800">{atendimento.telefone}</p>
             </div>
 
             <div>
@@ -165,7 +159,7 @@ export function DetalhesAtendimento() {
                 Data da Visita
               </p>
               <p className="mt-1 text-base text-slate-800">
-                {atendimento.dataVisita}
+                {formatarDataSomente(atendimento.dataVisita)}
               </p>
             </div>
 

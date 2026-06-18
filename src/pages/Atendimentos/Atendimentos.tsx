@@ -6,6 +6,7 @@ import {
 } from '../../components/StatusBadge/StatusBadge';
 import { useAtendimentos } from '../../contexts/AtendimentosContext';
 import type { AtendimentoStatus } from '../../types/atendimento';
+import { formatarDataSomente } from '../../utils/format';
 
 
 const statusOptions: { value: AtendimentoStatus | ''; label: string }[] = [
@@ -20,7 +21,7 @@ const inputClass =
   'min-w-[200px] rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20';
 
 export function Atendimentos() {
-  const { atendimentos } = useAtendimentos();
+  const { atendimentos, excluirAtendimento } = useAtendimentos();
   const [busca, setBusca] = useState('');
   const [filtroStatus, setFiltroStatus] = useState<AtendimentoStatus | ''>('');
 
@@ -101,7 +102,8 @@ export function Atendimentos() {
                   'Problema',
                   'Prioridade',
                   'Status',
-                  'Data Visita'
+                  'Data Visita',
+                  'Ações'
                 ].map((col) => (
                   <th
                     key={col}
@@ -143,7 +145,20 @@ export function Atendimentos() {
                     <StatusBadge status={atendimento.status} />
                   </td>
                   <td className="px-4 py-3 text-slate-600">
-                    {atendimento.dataVisita} {atendimento.horarioVisita}
+                    {formatarDataSomente(atendimento.dataVisita)} {atendimento.horarioVisita}
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      className="text-red-600 hover:text-red-700 text-sm"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (window.confirm('Confirma excluir este atendimento?')) {
+                          excluirAtendimento(atendimento.id)
+                        }
+                      }}
+                    >
+                      Excluir
+                    </button>
                   </td>
                 </tr>
               ))}
