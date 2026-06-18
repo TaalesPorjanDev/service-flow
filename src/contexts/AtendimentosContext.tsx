@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { toastShowSuccess } from '../contexts/ToastContext'
-import { atendimentosMock } from '../mocks/atendimentos'
 import type { Atendimento, NovoAtendimentoForm } from '../types/atendimento'
 
 interface AtendimentosContextValue {
@@ -25,9 +24,9 @@ export function AtendimentosProvider({ children }: { children: ReactNode }) {
   const [atendimentos, setAtendimentos] = useState<Atendimento[]>(() => {
     try {
       const salvo = localStorage.getItem('atendimentos')
-      return salvo ? JSON.parse(salvo) : atendimentosMock
+      return salvo ? JSON.parse(salvo) : []
     } catch {
-      return atendimentosMock
+      return []
     }
   })
 
