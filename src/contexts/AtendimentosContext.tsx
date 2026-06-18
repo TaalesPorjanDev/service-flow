@@ -48,13 +48,14 @@ export function AtendimentosProvider({ children }: { children: ReactNode }) {
   }
 
   function atualizarStatus(id: string, status: Atendimento['status']) {
+    console.log('atualizarStatus called', { id, status })
     setAtendimentos((prev) => {
-      console.log('atualizarStatus called', { id, status })
       const next = prev.map((a) => (a.id === id ? { ...a, status } : a))
       console.log('atendimentos next', next)
-      toastShowSuccess(`Status atualizado para: ${status}`)
       return next
     })
+    // chamar toast fora do updater para evitar setState durante render de outro componente
+    toastShowSuccess(`Status atualizado para: ${status}`)
   }
 
   function excluirAtendimento(id: string) {

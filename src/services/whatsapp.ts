@@ -6,8 +6,11 @@ export const avisarCliente = async (
     atendimento: Atendimento
 ) => {
     try {
+        const url = import.meta.env.VITE_WHATSAPP_WEBHOOK || ''
+        if (!url) throw new Error('VITE_WHATSAPP_WEBHOOK não configurado')
+
         const response = await axios.post (
-            "https://tales-n8n-webhook.iajhnu.easypanel.host/webhook/avisar-client",
+            url,
             {
                 cliente: atendimento.cliente,
                 telefone: atendimento.telefone,

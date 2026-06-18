@@ -2,7 +2,7 @@ import type { AtendimentoPrioridade, AtendimentoStatus } from '../../types/atend
 
 const statusLabels: Record<AtendimentoStatus, string> = {
   novo: 'Novo',
-  agendado: 'Agendado',
+  agendado: 'Em andamento',
   finalizado: 'Finalizado',
   cancelado: 'Cancelado',
 }
