@@ -5,6 +5,9 @@ import {
 } from '../../components/StatusBadge/StatusBadge';
 import { useAtendimentos } from '../../contexts/AtendimentosContext';
 import { avisarCliente } from '../../services/whatsapp';
+import { concluirAtendimento } from '../../services/concluirAtendimento';
+import { cancelarAtendimento } from '../../services/cancelarAtendimento';
+import { useState } from 'react';
 import { formatarDataSomente } from '../../utils/format';
 
 export function DetalhesAtendimento() {
@@ -13,6 +16,9 @@ export function DetalhesAtendimento() {
   const { atendimentos, atualizarStatus } = useAtendimentos();
 
   const atendimento = atendimentos.find((a) => a.id === id);
+
+  const [isConcluding, setIsConcluding] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   if (!atendimento) {
     return (
@@ -34,7 +40,7 @@ export function DetalhesAtendimento() {
   }
 
   return (
-    <>
+    <div key={`${atendimento.id}-${atendimento.status}`}>
       <header className="mb-7 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">
@@ -105,16 +111,41 @@ export function DetalhesAtendimento() {
                   Marcar como em andamento
                 </button>
                 <button
-                  onClick={() => atualizarStatus(atendimento.id, 'finalizado')}
-                  className="rounded bg-green-600 px-3 py-1 text-sm font-semibold text-white hover:bg-green-700"
+                  onClick={async () => {
+                    const confirmed = window.confirm('Tem certeza que deseja marcar este atendimento como concluído?')
+                    if (!confirmed) return
+                    try {
+                      setIsConcluding(true)
+                      const ok = await concluirAtendimento(atendimento)
+                      if (ok) {
+                        atualizarStatus(atendimento.id, 'finalizado')
+                      }
+                    } finally {
+                      setIsConcluding(false)
+                    }
+                  }}
+                  disabled={isConcluding}
+                  className="rounded bg-green-600 px-3 py-1 text-sm font-semibold text-white hover:bg-green-700 disabled:opacity-60"
                 >
-                  Marcar como concluído
+                  {isConcluding ? 'Concluindo...' : 'Marcar como concluído'}
                 </button>
                 <button
-                  onClick={() => atualizarStatus(atendimento.id, 'cancelado')}
-                  className="rounded bg-red-600 px-3 py-1 text-sm font-semibold text-white hover:bg-red-700"
+                  onClick={async () => {
+                    const confirmed = window.confirm('Tem certeza que deseja cancelar este atendimento?')
+                    if (!confirmed) return
+                    try {
+                      setIsCancelling(true)
+                      const ok = await cancelarAtendimento(atendimento)
+                      if (ok === false) return
+                      atualizarStatus(atendimento.id, 'cancelado')
+                    } finally {
+                      setIsCancelling(false)
+                    }
+                  }}
+                  disabled={isCancelling}
+                  className="rounded bg-red-600 px-3 py-1 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
                 >
-                  Marcar como cancelado
+                  {isCancelling ? 'Cancelando...' : 'Marcar como cancelado'}
                 </button>
               </div>
             </div>
@@ -202,6 +233,6 @@ export function DetalhesAtendimento() {
           Imprimir
         </button>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { toastShowSuccess } from '../contexts/ToastContext'
 import { atendimentosMock } from '../mocks/atendimentos'
 import type { Atendimento, NovoAtendimentoForm } from '../types/atendimento'
 
@@ -47,7 +48,13 @@ export function AtendimentosProvider({ children }: { children: ReactNode }) {
   }
 
   function atualizarStatus(id: string, status: Atendimento['status']) {
-    setAtendimentos((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
+    setAtendimentos((prev) => {
+      console.log('atualizarStatus called', { id, status })
+      const next = prev.map((a) => (a.id === id ? { ...a, status } : a))
+      console.log('atendimentos next', next)
+      toastShowSuccess(`Status atualizado para: ${status}`)
+      return next
+    })
   }
 
   function excluirAtendimento(id: string) {
