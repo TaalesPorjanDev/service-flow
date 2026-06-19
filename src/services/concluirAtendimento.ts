@@ -1,12 +1,12 @@
 import axios from "axios";
-import { toastShowError, toastShowSuccess } from "../contexts/ToastContext";
+import { toastShowError } from "../contexts/ToastContext";
 import type { Atendimento } from "../types/atendimento";
 
 export const concluirAtendimento = async (atendimento: Atendimento): Promise<boolean> => {
   const url = import.meta.env.VITE_WEBHOOK_CONCLUIDO || "";
   if (!url) {
     console.error('VITE_WEBHOOK_CONCLUIDO não configurado')
-    toastShowError('Erro ao concluir atendimento: URL não configurada.')
+    toastShowError('Erro: webhook de conclusão não configurado.')
     return false
   }
 
@@ -24,7 +24,6 @@ export const concluirAtendimento = async (atendimento: Atendimento): Promise<boo
       }
     );
 
-    toastShowSuccess('Atendimento concluído!')
     return true
   } catch (error: any) {
     console.error('Erro ao concluir atendimento:', error)

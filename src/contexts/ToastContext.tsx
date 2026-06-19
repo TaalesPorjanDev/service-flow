@@ -4,12 +4,14 @@ import { Toast } from '../components/Toast/Toast'
 type ToastContextType = {
   showSuccess: (message: string) => void
   showError: (message: string) => void
+  showInfo: (message: string) => void
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
 
 let globalShowSuccess: ((m: string) => void) | null = null
 let globalShowError: ((m: string) => void) | null = null
+let globalShowInfo: ((m: string) => void) | null = null
 
 export function toastShowSuccess(message: string) {
   if (globalShowSuccess) globalShowSuccess(message)
@@ -17,9 +19,12 @@ export function toastShowSuccess(message: string) {
 export function toastShowError(message: string) {
   if (globalShowError) globalShowError(message)
 }
+export function toastShowInfo(message: string) {
+  if (globalShowInfo) globalShowInfo(message)
+}
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<{ id: number; message: string; type: 'success' | 'error' }[]>([])
+  const [items, setItems] = useState<{ id: number; message: string; type: 'success' | 'error' | 'info' }[]>([])
 
   const push = useCallback((message: string, type: 'success' | 'error') => {
     const id = Date.now() + Math.random()
@@ -31,15 +36,18 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const showSuccess = useCallback((message: string) => push(message, 'success'), [push])
   const showError = useCallback((message: string) => push(message, 'error'), [push])
+  const showInfo = useCallback((message: string) => push(message, 'info'), [push])
 
   useEffect(() => {
     globalShowSuccess = showSuccess
     globalShowError = showError
+    globalShowInfo = showInfo
     return () => {
       globalShowSuccess = null
       globalShowError = null
+      globalShowInfo = null
     }
-  }, [showSuccess, showError])
+  }, [showSuccess, showError, showInfo])
 
   return (
     <ToastContext.Provider value={{ showSuccess, showError }}>

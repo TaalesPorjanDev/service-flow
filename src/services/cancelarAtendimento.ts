@@ -6,7 +6,7 @@ export const cancelarAtendimento = async (atendimento: Atendimento): Promise<boo
   const url = import.meta.env.VITE_WEBHOOK_CANCELADO || "";
   if (!url) {
     console.error('VITE_WEBHOOK_CANCELADO não configurado')
-    toastShowError('Erro ao cancelar atendimento: URL não configurada.')
+      toastShowError('Erro: webhook de cancelamento não configurado.')
     return false
   }
 
@@ -23,7 +23,8 @@ export const cancelarAtendimento = async (atendimento: Atendimento): Promise<boo
         }
       }
     );
-    toastShowSuccess('Atendimento cancelado!')
+      // não exibir toast de sucesso aqui para evitar duplicação;
+      // o `AtendimentosContext` exibirá a notificação com o tipo adequado
     return true
   } catch (error: any) {
     console.error('Erro ao cancelar atendimento:', error)

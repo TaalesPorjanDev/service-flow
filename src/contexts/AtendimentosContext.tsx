@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
-import { toastShowSuccess } from '../contexts/ToastContext'
+import { toastShowSuccess, toastShowError, toastShowInfo } from '../contexts/ToastContext'
 import type { Atendimento, NovoAtendimentoForm } from '../types/atendimento'
 
 interface AtendimentosContextValue {
@@ -54,7 +54,15 @@ export function AtendimentosProvider({ children }: { children: ReactNode }) {
       return next
     })
     // chamar toast fora do updater para evitar setState durante render de outro componente
-    toastShowSuccess(`Status atualizado para: ${status}`)
+    const texto = `Status atualizado: ${status.toString().toUpperCase()}`
+    if (status === 'cancelado') {
+      toastShowError(texto)
+    } else if (status === 'agendado') {
+      // status 'agendado' representa 'Em andamento' na UI — usar cor azul
+      toastShowInfo(texto)
+    } else {
+      toastShowSuccess(texto)
+    }
   }
 
   function excluirAtendimento(id: string) {

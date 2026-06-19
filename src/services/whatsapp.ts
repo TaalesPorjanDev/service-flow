@@ -9,7 +9,7 @@ export const avisarCliente = async (
                 const url = import.meta.env.VITE_WEBHOOK_WHATSAPP || ''
                 if (!url) {
                     console.error('VITE_WHATSAPP_WEBHOOK não configurado')
-                    toastShowError('Erro: webhook do WhatsApp não configurado (VITE_WHATSAPP_WEBHOOK).')
+                    toastShowError('Erro: webhook do WhatsApp não configurado.')
                     return
                 }
 
@@ -31,7 +31,7 @@ export const avisarCliente = async (
         );
 
         console.log(response.data)
-        toastShowSuccess('Cliente avisado com sucesso')
+        toastShowSuccess('Cliente avisado')
         
     } catch(error: any) {
         console.error('Erro ao avisar cliente:', error);

@@ -1,7 +1,7 @@
 import React from 'react'
 import './toast.css'
 
-type ToastItem = { id: number; message: string; type: 'success' | 'error' }
+type ToastItem = { id: number; message: string; type: 'success' | 'error' | 'info' }
 
 export const Toast: React.FC<{ items: ToastItem[] }> = ({ items }) => {
   return (
