@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { Atendimento } from "../types/atendimento";
-import { toastShowError, toastShowSuccess } from "../contexts/ToastContext";
+import { toastShowError } from "../contexts/ToastContext";
 
 export const cancelarAtendimento = async (atendimento: Atendimento): Promise<boolean> => {
   const url = import.meta.env.VITE_WEBHOOK_CANCELADO || "";
