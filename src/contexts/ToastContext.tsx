@@ -26,7 +26,7 @@ export function toastShowInfo(message: string) {
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<{ id: number; message: string; type: 'success' | 'error' | 'info' }[]>([])
 
-  const push = useCallback((message: string, type: 'success' | 'error') => {
+  const push = useCallback((message: string, type: 'success' | 'error' | 'info') => {
     const id = Date.now() + Math.random()
     setItems((s) => [...s, { id, message, type }])
     setTimeout(() => {
@@ -50,7 +50,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [showSuccess, showError, showInfo])
 
   return (
-    <ToastContext.Provider value={{ showSuccess, showError }}>
+    <ToastContext.Provider value={{ showSuccess, showError, showInfo }}>
       {children}
       <Toast items={items} />
     </ToastContext.Provider>
