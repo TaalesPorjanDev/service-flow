@@ -47,18 +47,14 @@ export function AtendimentosProvider({ children }: { children: ReactNode }) {
   }
 
   function atualizarStatus(id: string, status: Atendimento['status']) {
-    console.log('atualizarStatus called', { id, status })
-    setAtendimentos((prev) => {
-      const next = prev.map((a) => (a.id === id ? { ...a, status } : a))
-      console.log('atendimentos next', next)
-      return next
-    })
-    // chamar toast fora do updater para evitar setState durante render de outro componente
+    setAtendimentos((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, status } : a)),
+    )
+
     const texto = `Status atualizado: ${status.toString().toUpperCase()}`
     if (status === 'cancelado') {
       toastShowError(texto)
     } else if (status === 'agendado') {
-      // status 'agendado' representa 'Em andamento' na UI — usar cor azul
       toastShowInfo(texto)
     } else {
       toastShowSuccess(texto)

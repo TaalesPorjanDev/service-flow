@@ -1,25 +1,12 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
-import { toastShowInfo, toastShowSuccess, toastShowError } from './ToastContext'
 import axios from 'axios'
-
-export type Servico = {
-  id: string
-  cliente: string
-  telefone?: string
-  marca?: string
-  problema?: string
-  servicoRealizado?: string
-  prioridade?: string
-  dataVisita?: string
-  horaVisita?: string
-  endereco?: string
-  observacoes?: string
-}
+import { toastShowSuccess, toastShowError } from './ToastContext'
+import type { Servico } from '../types/servico'
 
 type EntregaContextType = {
   lista: Servico[]
   adicionar: (s: Servico) => void
-  notificar: (id: string) => void
+  notificar: (id: string) => Promise<void>
   excluir: (id: string) => void
 }
 
@@ -37,7 +24,11 @@ export const EntregaProvider = ({ children }: { children: ReactNode }) => {
 
   const salvar = (next: Servico[]) => {
     setLista(next)
-    try { localStorage.setItem('entrega_lista', JSON.stringify(next)) } catch {}
+    try {
+      localStorage.setItem('entrega_lista', JSON.stringify(next))
+    } catch {
+      /* ignore storage errors */
+    }
   }
 
   const adicionar = (s: Servico) => {
@@ -45,30 +36,31 @@ export const EntregaProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const excluir = (id: string) => {
-  const novaLista = lista.filter(item => item.id !== id)
-  salvar(novaLista)
-  toastShowSuccess('Atendimento excluído com sucesso')
-}
+    salvar(lista.filter((item) => item.id !== id))
+    toastShowSuccess('Atendimento excluído com sucesso')
+  }
 
   const notificar = async (id: string) => {
-    const servico = lista.find(i => i.id === id)
+    const servico = lista.find((i) => i.id === id)
     if (!servico) return
 
-    const webhook = import.meta.env.VITE_WEBHOOK_WHATSAPP_MAQUINA 
-
-    toastShowInfo('Aviso: Mandando dados para o n8n')
+    const webhook = import.meta.env.VITE_WEBHOOK_WHATSAPP_MAQUINA
+    if (!webhook) {
+      toastShowError('Erro: webhook de entrega não configurado.')
+      return
+    }
 
     try {
-      await axios.post(webhook, servico)
-      toastShowSuccess('Dados enviados para o n8n com sucesso')
-    } catch (err) {
-      // fallback: tentar fetch se axios não estiver funcionando
-      try {
-        await fetch(webhook, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(servico) })
-        toastShowSuccess('Dados enviados para o n8n com sucesso (fetch)')
-      } catch (e) {
-        toastShowError('Falha ao enviar dados para o n8n')
-      }
+      await axios.post(webhook, servico, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': import.meta.env.VITE_N8N_API_KEY || '',
+        },
+      })
+      toastShowSuccess('Cliente avisado sobre a entrega')
+    } catch (error) {
+      console.error('Erro ao notificar cliente:', error)
+      toastShowError('Falha ao avisar cliente sobre a entrega')
     }
   }
 

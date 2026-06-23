@@ -1,56 +1,63 @@
-import React from 'react';
-import { useEntrega } from '../../contexts/EntregaContext';
+import { useState } from 'react'
+import { useEntrega } from '../../contexts/EntregaContext'
 
-const EntregaMaquinas: React.FC = () => {
-  const { lista, notificar, excluir } = useEntrega();
+export function EntregaMaquinas() {
+  const { lista, notificar, excluir } = useEntrega()
+  const [notificandoId, setNotificandoId] = useState<string | null>(null)
+
+  async function handleNotificar(id: string) {
+    setNotificandoId(id)
+    try {
+      await notificar(id)
+    } finally {
+      setNotificandoId(null)
+    }
+  }
 
   return (
     <div className="max-w-3xl">
-      <h2 className="text-lg font-semibold text-slate-800 mb-4">
-        Entrega de Máquinas
-      </h2>
+      <header className="mb-4">
+        <h2 className="text-2xl font-bold text-slate-800">Entrega de Máquinas</h2>
+        <p className="mt-1 text-sm text-slate-500">
+          Gerencie as entregas pendentes e avise os clientes
+        </p>
+      </header>
+
       {lista.length === 0 && (
         <p className="text-sm text-slate-500">Nenhuma máquina para entrega.</p>
       )}
 
-      <ul className="space-y-4 mt-3">
+      <ul className="mt-3 space-y-4">
         {lista.map((item) => (
           <li
             key={item.id}
-            className="rounded-lg border border-slate-200 bg-white p-4"
+            className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
           >
-            <div className="flex justify-between">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
               <div>
                 <strong className="block text-slate-800">{item.cliente}</strong>
+                <div className="text-sm text-slate-600">Telefone: {item.telefone}</div>
+                <div className="text-sm text-slate-600">Marca: {item.marca}</div>
                 <div className="text-sm text-slate-600">
-                  Telefone: {item.telefone || '-'}
+                  Serviço: {item.servicoRealizado}
                 </div>
                 <div className="text-sm text-slate-600">
-                  Marca: {item.marca || '-'}
-                </div>
-                <div className="text-sm text-slate-600">
-                  Serviço: {item.servicoRealizado || '-'}
-                </div>
-                <div className="text-sm text-slate-600">
-                  Data/Hora: {item.dataVisita || '-'} {item.horaVisita || ''}
+                  Data/Hora: {item.dataVisita} {item.horaVisita}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <button
-                  onClick={() => notificar(item.id)}
-                  className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700"
+                  onClick={() => handleNotificar(item.id)}
+                  disabled={notificandoId === item.id}
+                  className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 disabled:opacity-60"
                 >
-                  Avisar cliente
+                  {notificandoId === item.id ? 'Enviando...' : 'Avisar cliente'}
                 </button>
 
                 <button
                   onClick={() => {
-                    if (
-                      window.confirm(
-                        'Deseja realmente excluir este atendimento?'
-                      )
-                    ) {
-                      excluir(item.id);
+                    if (window.confirm('Deseja realmente excluir este atendimento?')) {
+                      excluir(item.id)
                     }
                   }}
                   className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
@@ -63,7 +70,7 @@ const EntregaMaquinas: React.FC = () => {
         ))}
       </ul>
     </div>
-  );
-};
+  )
+}
 
-export default EntregaMaquinas;
+export default EntregaMaquinas

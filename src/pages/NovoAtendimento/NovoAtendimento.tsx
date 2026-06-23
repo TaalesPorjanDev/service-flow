@@ -2,30 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
 import { useAtendimentos } from '../../contexts/AtendimentosContext'
-import { normalizarParaIsoDate } from '../../utils/format'
+import { novoAtendimentoSchema } from '../../schemas/atendimento.schema'
 import type { NovoAtendimentoForm } from '../../types/atendimento'
-
-const schema = z.object({
-  cliente: z.string().min(2, 'Informe o nome do cliente'),
-  telefone: z.string().min(10, 'Informe um telefone válido'),
-  marca: z.string().min(2, 'Informe a marca'),
-  problema: z.string().min(5, 'Descreva o problema'),
-  prioridade: z.enum(['baixa', 'media', 'alta']),
-  dataVisita: z.string().min(1, 'Informe a data da visita'),
-  horarioVisita: z.string().min(1, 'Informe o horário da visita'),
-  endereco: z.string().optional(),
-  observacao: z.string().optional(),
-})
-
-const fieldClass = (hasError: boolean) =>
-  [
-    'w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-slate-800 transition-colors focus:outline-none focus:ring-2',
-    hasError
-      ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
-      : 'border-slate-200 focus:border-blue-500 focus:ring-blue-500/20',
-  ].join(' ')
+import { fieldClass } from '../../utils/form'
+import { normalizarParaIsoDate } from '../../utils/format'
 
 export function NovoAtendimento() {
   const navigate = useNavigate()
@@ -38,7 +19,7 @@ export function NovoAtendimento() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<NovoAtendimentoForm>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(novoAtendimentoSchema),
     defaultValues: {
       prioridade: 'media',
       cliente: '',
@@ -62,16 +43,16 @@ export function NovoAtendimento() {
 
     const criado = adicionarAtendimento(payload)
     setSucesso(`Atendimento ${criado.id} criado com sucesso!`)
-    reset({ 
-      prioridade: 'media', 
-      cliente: '', 
-      telefone: '', 
-      marca: '', 
-      problema: '', 
-      dataVisita: '', 
-      horarioVisita: '', 
-      endereco: '', 
-      observacao: '' 
+    reset({
+      prioridade: 'media',
+      cliente: '',
+      telefone: '',
+      marca: '',
+      problema: '',
+      dataVisita: '',
+      horarioVisita: '',
+      endereco: '',
+      observacao: '',
     })
 
     setTimeout(() => {
@@ -117,9 +98,15 @@ export function NovoAtendimento() {
             <input
               id="telefone"
               type="tel"
-              placeholder="(XX) XXXXX-XXXX"
+              inputMode="numeric"
+              maxLength={11}
+              placeholder="11999999999"
               className={fieldClass(!!errors.telefone)}
-              {...register('telefone')}
+              {...register('telefone', {
+                onChange: (e) => {
+                  e.target.value = e.target.value.replace(/\D/g, '')
+                },
+              })}
             />
             {errors.telefone && (
               <p className="mt-1 text-xs text-red-600">{errors.telefone.message}</p>

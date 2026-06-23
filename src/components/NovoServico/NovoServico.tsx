@@ -1,131 +1,192 @@
-import React, { useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 import { useEntrega } from '../../contexts/EntregaContext'
 import { useToast } from '../../contexts/ToastContext'
-import type { Servico } from '../../contexts/EntregaContext'
-import { v4 as uuidv4 } from 'uuid'
+import { novoServicoSchema, type NovoServicoSchema } from '../../schemas/servico.schema'
+import type { Servico } from '../../types/servico'
+import { fieldClass } from '../../utils/form'
 
-const fieldClass = () =>
-  [
-    'w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-slate-800 transition-colors focus:outline-none focus:ring-2',
-    'border-slate-200 focus:border-blue-500 focus:ring-blue-500/20',
-  ].join(' ')
-
-export const NovoServico: React.FC = () => {
+export function NovoServico() {
   const { adicionar } = useEntrega()
   const { showSuccess } = useToast()
-  const [cliente, setCliente] = useState('')
-  const [telefone, setTelefone] = useState('')
-  const [marca, setMarca] = useState('')
-  const [problema, setProblema] = useState('')
-  const [servicoRealizado, setServicoRealizado] = useState('')
-  const [dataVisita, setDataVisita] = useState('')
-  const [horaVisita, setHoraVisita] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<NovoServicoSchema>({
+    resolver: zodResolver(novoServicoSchema),
+    defaultValues: {
+      cliente: '',
+      telefone: '',
+      marca: '',
+      problema: '',
+      servicoRealizado: '',
+      dataVisita: '',
+      horaVisita: '',
+    },
+  })
+
+  function onSubmit(dados: NovoServicoSchema) {
     const novo: Servico = {
       id: uuidv4(),
-      cliente,
-      telefone,
-      marca,
-      problema,
-      servicoRealizado,
-      dataVisita,
-      horaVisita,
+      ...dados,
     }
     adicionar(novo)
-    showSuccess('Dados salvos com sucesso e enviados para entrega')
-    setCliente('')
-    setTelefone('')
-    setMarca('')
-    setProblema('')
-    setServicoRealizado('')
-    setDataVisita('')
-    setHoraVisita('')
+    showSuccess('Serviço salvo e enviado para a lista de entrega')
+    reset()
   }
 
   return (
     <div>
       <header className="mb-4">
         <h3 className="text-lg font-semibold text-slate-800">Novo Serviço / Entrega</h3>
-        <p className="mt-1 text-sm text-slate-500">Preencha os dados para enviar para a lista de entrega</p>
+        <p className="mt-1 text-sm text-slate-500">
+          Preencha os dados para enviar para a lista de entrega
+        </p>
       </header>
 
       <div className="max-w-2xl rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)} noValidate>
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-700">Cliente</label>
+            <label htmlFor="cliente" className="mb-1.5 block text-sm font-semibold text-slate-700">
+              Cliente
+            </label>
             <input
-              className={fieldClass()}
-              value={cliente}
-              onChange={e => setCliente(e.target.value)}
+              id="cliente"
+              className={fieldClass(!!errors.cliente)}
               placeholder="Nome do cliente"
-              required
+              {...register('cliente')}
             />
+            {errors.cliente && (
+              <p className="mt-1 text-xs text-red-600">{errors.cliente.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-700">Telefone</label>
+            <label htmlFor="telefone" className="mb-1.5 block text-sm font-semibold text-slate-700">
+              Telefone
+            </label>
             <input
-              className={fieldClass()}
-              value={telefone}
-              onChange={e => setTelefone(e.target.value)}
-              placeholder="(XX) XXXXX-XXXX"
+              id="telefone"
+              type="tel"
+              inputMode="numeric"
+              maxLength={11}
+              className={fieldClass(!!errors.telefone)}
+              placeholder="11999999999"
+              {...register('telefone', {
+                onChange: (e) => {
+                  e.target.value = e.target.value.replace(/\D/g, '')
+                },
+              })}
             />
+            {errors.telefone && (
+              <p className="mt-1 text-xs text-red-600">{errors.telefone.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-700">Marca</label>
+            <label htmlFor="marca" className="mb-1.5 block text-sm font-semibold text-slate-700">
+              Marca
+            </label>
             <input
-              className={fieldClass()}
-              value={marca}
-              onChange={e => setMarca(e.target.value)}
+              id="marca"
+              className={fieldClass(!!errors.marca)}
               placeholder="Ex: Samsung"
+              {...register('marca')}
             />
+            {errors.marca && (
+              <p className="mt-1 text-xs text-red-600">{errors.marca.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-700">Problema</label>
+            <label htmlFor="problema" className="mb-1.5 block text-sm font-semibold text-slate-700">
+              Problema
+            </label>
             <input
-              className={fieldClass()}
-              value={problema}
-              onChange={e => setProblema(e.target.value)}
+              id="problema"
+              className={fieldClass(!!errors.problema)}
               placeholder="Descreva o problema"
+              {...register('problema')}
             />
+            {errors.problema && (
+              <p className="mt-1 text-xs text-red-600">{errors.problema.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-700">Serviço realizado</label>
+            <label
+              htmlFor="servicoRealizado"
+              className="mb-1.5 block text-sm font-semibold text-slate-700"
+            >
+              Serviço realizado
+            </label>
             <input
-              className={fieldClass()}
-              value={servicoRealizado}
-              onChange={e => setServicoRealizado(e.target.value)}
+              id="servicoRealizado"
+              className={fieldClass(!!errors.servicoRealizado)}
               placeholder="O que foi feito"
+              {...register('servicoRealizado')}
             />
+            {errors.servicoRealizado && (
+              <p className="mt-1 text-xs text-red-600">{errors.servicoRealizado.message}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-slate-700">Data</label>
-              <input type="date" className={fieldClass()} value={dataVisita} onChange={e => setDataVisita(e.target.value)} />
+              <label
+                htmlFor="dataVisita"
+                className="mb-1.5 block text-sm font-semibold text-slate-700"
+              >
+                Data
+              </label>
+              <input
+                id="dataVisita"
+                type="date"
+                className={fieldClass(!!errors.dataVisita)}
+                {...register('dataVisita')}
+              />
+              {errors.dataVisita && (
+                <p className="mt-1 text-xs text-red-600">{errors.dataVisita.message}</p>
+              )}
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-slate-700">Hora</label>
-              <input type="time" className={fieldClass()} value={horaVisita} onChange={e => setHoraVisita(e.target.value)} />
+              <label
+                htmlFor="horaVisita"
+                className="mb-1.5 block text-sm font-semibold text-slate-700"
+              >
+                Hora
+              </label>
+              <input
+                id="horaVisita"
+                type="time"
+                className={fieldClass(!!errors.horaVisita)}
+                {...register('horaVisita')}
+              />
+              {errors.horaVisita && (
+                <p className="mt-1 text-xs text-red-600">{errors.horaVisita.message}</p>
+              )}
             </div>
           </div>
 
           <div className="flex gap-3 pt-1">
-            <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">Salvar e enviar para Entrega</button>
-            <button type="button" onClick={() => {
-              setCliente('')
-              setTelefone('')
-              setMarca('')
-              setProblema('')
-              setServicoRealizado('')
-              setDataVisita('')
-              setHoraVisita('')
-            }} className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Limpar</button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+            >
+              {isSubmitting ? 'Salvando...' : 'Salvar e enviar para Entrega'}
+            </button>
+            <button
+              type="button"
+              onClick={() => reset()}
+              className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+            >
+              Limpar
+            </button>
           </div>
         </form>
       </div>
