@@ -4,6 +4,8 @@ const navItems = [
   { to: '/', label: 'Dashboard', end: true },
   { to: '/atendimentos', label: 'Atendimentos', end: false },
   { to: '/novo-atendimento', label: 'Novo Atendimento', end: false },
+  { to: '/novo-servico', label: 'Novo Serviço', end: false },
+  { to: '/entrega', label: 'Entrega de Máquinas', end: false },
 ]
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
