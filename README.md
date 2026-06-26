@@ -202,3 +202,15 @@ já está preparado para substituir os dados mockados por chamadas reais utiliza
 
 GitHub:
 https://github.com/TaalesPorjanDev
+
+
+Ideias futuras
+
+- Login por empresa
+- Painel administrativo
+- Histórico de clientes
+- Integração com Google Agenda
+- Envio de lembrete um dia antes
+- Orçamentos em PDF
+- Dashboard financeiro
+- Upload de fotos do serviço
