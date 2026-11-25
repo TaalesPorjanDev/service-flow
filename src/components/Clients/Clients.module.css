@@ -1,0 +1,150 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.subtitle {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+/* Toolbar (Filtros) */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  background-color: var(--color-bg-surface);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 240px;
+}
+
+.filterSelect {
+  height: 40px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-sm);
+  color: var(--color-text-main);
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.filterSelect:focus {
+  border-color: var(--color-primary);
+}
+
+/* Tabela */
+.tableContainer {
+  background-color: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--font-sm);
+}
+
+.table th {
+  background-color: var(--color-bg-subtle);
+  padding: var(--space-3) var(--space-4);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  text-transform: uppercase;
+  font-size: var(--font-xs);
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-main);
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background-color: var(--color-bg-subtle);
+}
+
+/* Célula do Cliente */
+.clientName {
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.clientEmail {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* Célula de Ações */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.actionButton {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-xs);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-main);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.actionButton:hover {
+  background-color: var(--color-bg-subtle);
+  border-color: var(--color-border-hover);
+}
+
+.actionDelete:hover {
+  background-color: var(--color-status-inactive-bg);
+  color: var(--color-status-inactive-text);
+  border-color: var(--color-status-inactive-border);
+}
+
+/* Empty State */
+.emptyState {
+  padding: var(--space-10);
+  text-align: center;
+  color: var(--color-text-muted);
+}
