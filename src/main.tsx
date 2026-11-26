@@ -1,13 +1,10 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { App } from './App'
-import './styles/global.css'
-import { EntregaProvider } from './contexts/EntregaContext'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import './styles/global.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <EntregaProvider>
-      <App />
-    </EntregaProvider>
-  </StrictMode>,
-)
+    <App />
+  </StrictMode>
+);
